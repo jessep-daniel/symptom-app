@@ -1,98 +1,107 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import * as Haptics from 'expo-haptics';
+import { Link } from 'expo-router';
+import { Pressable, StyleSheet, View } from 'react-native';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+
+function triggerSelectionHaptic() {
+  void Haptics.selectionAsync().catch(() => undefined);
+}
 
 export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
+    <ThemedView style={styles.container}>
+      <View style={styles.heroCard}>
+        <ThemedText style={styles.eyebrow}>Local symptom tracking</ThemedText>
+        <ThemedText type="title" style={styles.title}>
+          Symptom Tracker
         </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+        <ThemedText style={styles.description}>
+          Log symptoms quickly, review saved entries, and edit them later. Everything stays local
+          on your device for this MVP.
+        </ThemedText>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+        <View style={styles.infoBlock}>
+          <ThemedText style={styles.infoLabel}>Current MVP</ThemedText>
+          <ThemedText style={styles.infoText}>Simple symptom logging with offline local storage.</ThemedText>
+        </View>
+
+        <Link href="/explore" asChild>
+          <Pressable onPress={triggerSelectionHaptic} hitSlop={8} style={styles.button}>
+            <ThemedText style={styles.buttonText}>Open Symptom Log</ThemedText>
+          </Pressable>
+        </Link>
+      </View>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 24,
+    justifyContent: 'center',
+  },
+  heroCard: {
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 20,
+    paddingVertical: 22,
+    gap: 14,
+  },
+  eyebrow: {
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: '#5B6470',
+  },
+  title: {
+    lineHeight: 38,
+  },
+  description: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#374151',
+  },
+  infoBlock: {
+    borderRadius: 16,
+    backgroundColor: '#F7F8FA',
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    gap: 4,
+  },
+  infoLabel: {
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: '700',
+    letterSpacing: 0.6,
+    textTransform: 'uppercase',
+    color: '#5B6470',
+  },
+  infoText: {
+    fontSize: 15,
+    lineHeight: 22,
+    color: '#11181C',
+  },
+  button: {
+    marginTop: 4,
+    minHeight: 54,
+    backgroundColor: '#11181C',
+    borderRadius: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  buttonText: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+    fontSize: 16,
   },
 });
